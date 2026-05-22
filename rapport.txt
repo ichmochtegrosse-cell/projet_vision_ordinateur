@@ -1,0 +1,99 @@
+=================================================================
+  VISION PAR ORDINATEUR — Master 2 BDGL
+  Rapport de projet
+  Auteur : Hypollite Jean-Marc
+  Date   : 22/05/2026 07:52
+=================================================================
+
+1. INTRODUCTION
+----------------------------------------
+Ce projet présente cinq méthodes classiques de vision par ordinateur
+appliquées sur l'image de couverture du livre «Rendez-vous au sommet»
+de Zig Ziglar. L'image contient du texte, des bords nets et des textures
+variées — un cas de test riche pour les détecteurs de points d'intérêt.
+
+Image : sommet.jpeg  |  Dimensions : 225×225 px
+
+2. PRÉSENTATION DES MÉTHODES
+----------------------------------------
+
+  ► Harris (1988)
+    Détecteur de coins basé sur la matrice de structure (matrice M = A^T A).
+      Réponse R = det(M) - k·trace(M)². Coin si R > seuil.
+      Avantages : simple, rapide, invariant à la rotation.
+      Limites   : sensible à l'échelle, non invariant au zoom.
+
+  ► SIFT (Lowe, 2004)
+    Détecte des keypoints stables dans l'espace-échelle (DoG).
+      Descripteur : histogramme de gradients 128-D.
+      Avantages : invariant à l'échelle, rotation, illumination.
+      Limites   : lent, breveté (domaine public depuis 2020).
+
+  ► SURF (Bay, 2006)
+    Version accélérée de SIFT via filtres Haar approximés (Hessien).
+      Descripteur : 64-D ou 128-D.
+      Avantages : 3× plus rapide que SIFT.
+      Limites   : breveté (OpenCV contrib uniquement).
+
+  ► ORB (Rublee, 2011)
+    Combine FAST (détection) + BRIEF orienté (description).
+      Descripteur binaire 256 bits — distance de Hamming.
+      Avantages : très rapide, libre de droits, embarqué.
+      Limites   : moins robuste que SIFT sur les grandes transformations.
+
+  ► GLCM / Haralick (1973)
+    Matrice de co-occurrence des niveaux de gris — texture statistique.
+      5 descripteurs : contraste, dissimilarité, homogénéité, énergie, corrélation.
+      Avantages : simple, interprétable, efficace pour la classification.
+      Limites   : ne capture pas la structure spatiale globale.
+
+3. MATÉRIELS ET MÉTHODES
+----------------------------------------
+  Matériels
+    OS       : Ubuntu / Windows / macOS
+    IDE      : Visual Studio Code
+    Python   : 3.8+
+    Librairies principales :
+      • opencv-python   (Harris, SIFT, ORB)
+      • scikit-image    (GLCM / Haralick)
+      • numpy, matplotlib
+
+  Données
+    Image unique : sommet.jpeg  (225×225 px, RGB)
+    Source : couverture du livre «Rendez-vous au sommet», Zig Ziglar
+
+  Code
+    src/main.py    — pipeline principal (Harris→SIFT→SURF→ORB→GLCM)
+    src/rapport.py — génération de ce rapport
+
+4. RÉSULTATS ET DISCUSSION
+----------------------------------------
+  Harris   : 6187 coins détectés
+  SIFT     : 370 keypoints  (descripteurs 128-D)
+  ORB      : 740 keypoints  (descripteurs 256-bits)
+  SURF     : algorithme breveté → BRISK utilisé en substitut (676 kp)
+
+  Descripteurs GLCM (moyenne sur 4 angles) :
+    contrast        : 50.8219
+    dissimilarity   : 2.7794
+    homogeneity     : 0.6592
+    energy          : 0.1517
+    correlation     : 0.8996
+
+  Discussion
+  SIFT et SURF détectent des zones riches en gradient (lettres, bords du livre).
+  ORB, plus rapide, donne des keypoints comparables mais moins précis.
+  Harris est idéal pour les coins nets (coins du livre, lettres en relief).
+  GLCM révèle une texture modérément homogène avec faible contraste global,
+  ce qui est cohérent avec une image d'impression sur fond coloré uni.
+
+5. CONCLUSION
+----------------------------------------
+  Ce projet a permis d'implémenter et comparer 5 méthodes fondamentales
+  de vision par ordinateur sur une image réelle contenant texte et formes.
+  Harris reste une référence pour les coins ; SIFT est le plus robuste en
+  matching ; ORB est idéal pour les systèmes embarqués ; GLCM offre une
+  description de texture utile pour la classification d'images.
+
+  Résultats visuels : voir results/resultats_complets.png
+=================================================================
