@@ -242,7 +242,7 @@ def build_figure(img_rgb, gray,
     out_path = RES_DIR / "resultats_complets.png"
     plt.savefig(out_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
     print(f"\n[OK] Figure sauvegardée → {out_path}")
-    plt.show()
+    plt.close()
 
 
 # ═══════════════════════════════════════════════════════════
